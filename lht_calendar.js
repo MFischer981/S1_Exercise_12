@@ -5,8 +5,8 @@
    Tutorial 10
    Tutorial Case
 
-   Author: 
-   Date:  
+   Author: Micah Fischer
+   Date:  2-26-19
 
    Filename:   lht_calendar.js  
 
