@@ -31,7 +31,7 @@
 */
 
 // Set the date displayed in the calendar. 
-var thisDay = new Date("August 24, 2018");
+var thisDay = new Date();
 
 // Write the calendar to the element with the id calendar.
 document.getElementById("calendar").innerHTML = createCalendar(thisDay);
@@ -41,6 +41,7 @@ function createCalendar(calDate) {
       var calendarHTML = "<table id='calendar_table'>";
       calendarHTML += calCaption(calDate);
       calendarHTML += calWeekdayRow();
+      calendarHTML += calDays(calDate);
       calendarHTML += "</table>";
       return calendarHTML;
 }
@@ -77,12 +78,52 @@ function calWeekdayRow() {
 function daysInMonth(calDate) {
       // array of days in each month
       var dayCount = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-      var thisYear = CalDate.getFullYear();
-      var thisMonth = CalDate.getMonth();
+      var thisYear = calDate.getFullYear();
+      var thisMonth = calDate.getMonth();
 
+      // revise days in February for leap years
       if (thisYear % 4 === 0) {
-            dayCount[1] = 29;
+            if ((thisYear % 100 != 0) || (thisYear % 400 === 0)) {
+                  dayCount[1] = 29;
+            }
       }
 
+      // return the number of days for the current month.
       return dayCount[thisMonth]
+}
+
+// function to write the table rows for each day of the month.
+function calDays(calDate) {
+      //determine the starting day of the month.
+      var day = new Date(calDate.getFullYear(), calDate.getMonth(), 1);
+      var weekDay = day.getDay();
+
+      //write blank cells preceding the starting day.
+      var htmlCode = "<tr>";
+      for (var i = 0; i < weekDay; i++) {
+            htmlCode += "<td></td>"
+      }
+
+      //Write cells for each day of the month.
+      var totalDays = daysInMonth(calDate);
+      // Sets variable for highlighted date to today.
+      var highlightDay = calDate.getDate();
+
+
+      for (var i = 1; i <= totalDays; i++) {
+            day.setDate(i);
+            weekDay = day.getDay();
+
+            if (weekDay === 0) htmlCode += "<tr>";
+
+            if (i === highlightDay) {
+                  htmlCode += "<td class='calendar_dates' id='calendar_today'>" + i + dayEvent[i] + "</td>";
+            } else {
+                  htmlCode += "<td class='calendar_dates'>" + i + dayEvent[i] + "</td>"
+            }
+
+            if (weekDay === 6) htmlCode += "</tr>";
+      }
+
+      return htmlCode;
 }
